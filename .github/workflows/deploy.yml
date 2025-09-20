@@ -21,9 +21,8 @@ jobs:
           key: ${{ secrets.EC2_DEPLOY_KEY }}
           port: 22
           script: |
-            cd ~/webServer
+            cd ~/webServer/Web
             git fetch origin develop
             git reset --hard origin/develop
-            pkill -f "python3 app.py" || true
-            nohup python3 ~/webServer/ProyectoBiometriaSprint0/app.py > ~/webServer/flask.log 2>&1 &
+            sudo systemctl restart flask.service
 
