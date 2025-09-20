@@ -2,6 +2,7 @@ import os
 import sqlite3
 from flask import Flask, request, jsonify
 from datetime import datetime
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -17,13 +18,45 @@ def recibir_datos():
     contador = data['Contador']
     co2 = data['CO2']
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO datosSensor (Fecha, Contador, CO2) VALUES (?, ?, ?)",
-        (fechahora, contador, co2)
-    )
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT OR REPLACE INTO datosSensor (Fecha, Contador, CO2) VALUES (?, ?, ?)",
+            (fechahora, contador, co2)
+        )
+        conn.commit()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
 
     return jsonify({"status": "ok"}), 200
+
+@app.route('/ultimo', methods=['GET'])
+def ultimo():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT Fecha, Contador, CO2 FROM datosSensor ORDER BY Fecha DESC LIMIT 1")
+        row = cursor.fetchone()
+    finally:
+        conn.close()
+
+    if row:
+        return jsonify({
+            "Fecha": row[0],
+            "Contador": row[1],
+            "CO2": row[2]
+        })
+    else:
+        return jsonify({"error": "No data"}), 404
+    
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
