@@ -123,6 +123,18 @@ public class MainActivity extends AppCompatActivity {
                     + Utilidades.bytesToInt(tib.getMinor()) + " ) ");
             Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
             Log.d(ETIQUETA_LOG, " ****************************************************");
+
+            //Enviamos los datos a la API:
+            try {
+                if(bluetoothDevice.getName() == "Fédor"){
+                    TransporteDatos.ProcesarTrama(tib);
+                }
+            } catch (SecurityException e) {
+                Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
         }else {
             Log.d(ETIQUETA_LOG, "UUID no valido");
         }
