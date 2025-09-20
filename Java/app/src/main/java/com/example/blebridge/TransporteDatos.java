@@ -6,9 +6,19 @@ package com.example.blebridge;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 //Esta clase procesa las tramas recibidas y envia los datos contenidos a la BBDD a traves de la API
 public class TransporteDatos {
-    static final String DIRECCIONAPI = "";
+    static final String DIRECCIONAPI = "http://localhost:63273/datosSensor";
 
     //Clase para los datos procesados porque Java no tiene structs
     private static class DatosProcesados{
@@ -40,11 +50,43 @@ public class TransporteDatos {
 
             return new DatosProcesados(contador, valorCO2); //Devolvemos la clase con los datos del sensor
         } else {
-            throw new Exception("Medicion leida no es de C02");
+            throw new Exception("Medicion leída no es de C02");
         }
     }
 
-    public static void EnviarDatos(){
-        //ToDo: Todavía tengo que crear la API
+    public static void EnviarDatos(DatosProcesados datos){
+        try {
+            //Obtenemos fecha actual
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String timestamp = sdf.format(new Date());
+
+            //Construimos el JSON con los datos a enviar
+            JSONObject json = new JSONObject();
+            json.put("Fecha", timestamp);
+            json.put("Contador", datos.getC02());
+            json.put("CO2", datos.getC02());
+
+            //Establecemos la conexión y indicamos que es un POST
+            URL url = new URL(DIRECCIONAPI);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setDoOutput(true);
+
+            // Enviamos los datos
+            try (OutputStream os = conn.getOutputStream()){
+                byte[] input = json.toString().getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            //Recibimos la respuesta y desconectamos
+            int code = conn.getResponseCode();
+            System.out.println("Respuesta del servidor: " + code);
+            conn.disconnect();
+
+        } catch (Exception e) {
+            //Por que es Java con lo que trabajamos
+            e.printStackTrace();
+        }
     }
 }
