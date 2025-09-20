@@ -25,4 +25,5 @@ jobs:
             git fetch origin develop
             git reset --hard origin/develop
             pkill -f "python3 app.py" || true
-            nohup python3 app.py > flask.log 2>&1 &
+            nohup python3 ~/webServer/ProyectoBiometriaSprint0/app.py > ~/webServer/flask.log 2>&1 &
+
