@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint 0 Fédor</title>
+</head>
+<body>
+    <h2>Última lectura</h2>
+    <button onclick="obtenerUltimo()">Obtener Última Lectura</button>
+    <div id="resultado">
+        Fecha: N/A<br>
+        Contador: N/A<br>
+        CO2: N/A
+    </div>
+    
+    <script>
+        function obtenerUltimo() {
+            fetch('/ultimo')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById("resultado").innerHTML = "No hay datos aún";
+                    } else {
+                        document.getElementById("resultado").innerHTML =
+                        "Fecha: " + data.Fecha + "<br>" +
+                        "Contador: " + data.Contador + "<br>" +
+                        "CO2: " + data.CO2;
+                    }
+                })
+                .catch(err => {
+                    alert("Error al obtener datos: " + err);
+                });
+        }
+
+        setInterval(obtenerUltimo, 5000);
+    </script>
+</body>
+</html>
