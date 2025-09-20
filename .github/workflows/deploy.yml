@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.EC2_DEPLOY_KEY }}
           port: 22
           script: |
-            cd ~/Web
+            cd ~/webServer
             git fetch origin develop
             git reset --hard origin/develop
             pkill -f "python3 app.py" || true
