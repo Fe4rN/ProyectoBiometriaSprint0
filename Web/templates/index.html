@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sprint 0 Fédor</title>
-    <script src="../logicaNegocio.js" defer></script>
+    <script src="../static/logicaNegocio.js" defer></script>
 </head>
 <body>
     <h2>Última lectura de sensor</h2>
@@ -14,5 +14,20 @@
         Contador: N/A<br>
         CO2: N/A
     </div>
+
+    <hr>
+
+    <h2>Agregar nueva lectura</h2>
+<form id="sensorForm" onsubmit="enviarLectura(event)">
+    <label for="contador">Contador:</label><br>
+    <input type="number" id="contador" name="contador" required><br><br>
+
+    <label for="co2">CO2:</label><br>
+    <input type="number" id="co2" name="co2" required><br><br>
+
+    <button type="submit">Enviar Lectura</button>
+</form>
+
+<div id="mensaje"></div>
 </body>
 </html>
