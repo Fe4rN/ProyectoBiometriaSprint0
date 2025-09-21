@@ -18,10 +18,11 @@ import java.util.Date;
 
 //Esta clase procesa las tramas recibidas y envia los datos contenidos a la BBDD a traves de la API
 public class TransporteDatos {
-    static final String DIRECCIONAPI = "http://localhost:63273/datosSensor";
+    //Dirección de la instancia EC2
+    static final String DIRECCIONAPI = "http://13.37.194.239:5000/datosSensor";
 
     //Clase para los datos procesados porque Java no tiene structs
-    private static class DatosProcesados{
+    public static class DatosProcesados{
         int contador;
         int C02;
         public int getContador() { return contador; }
