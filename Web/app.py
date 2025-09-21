@@ -21,6 +21,10 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "datosSensores.db")
 # Referencia a carpeta de HTMLs
 templates = Jinja2Templates(directory="templates")
 
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Estructura de datos
 class SensorData(BaseModel):
     Fecha: str

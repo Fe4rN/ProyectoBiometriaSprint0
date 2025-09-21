@@ -24,31 +24,30 @@ async function obtenerUltimo() {
 //Actualizamos los datos cada 5 segundos
 setInterval(obtenerUltimo, 5000);
 
+
 // Método para subir datos manualmente
-async function enviarLectura(events) {
-    event.preventDefault();
+document.getElementById("sensorForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
     const contador = document.getElementById("contador").value;
     const co2 = document.getElementById("co2").value;
 
-    const datos = {Contador:parseInt(contador), CO2: parseInt(co2)};
-
-    try{
-        const respuesta = await fetch('/datosSensor', {
+    try {
+        const response = await fetch("/datosSensor", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(datos)
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ Contador: parseInt(contador), CO2: parseFloat(co2) })
         });
 
-        const resultado = await respuesta.json();
-
-        if(respuesta.ok){
-            document.getElementById("mensaje").innerText = "Lectura enviada con éxito"
-            obtenerUltimo();
+        const data = await response.json();
+        if (data.status === "ok") {
+            document.getElementById("resultado").innerText = "Datos enviados correctamente";
         } else {
-            document.getElementById("mensaje").innerText = `Error: ${result.error}`;
+            document.getElementById("resultado").innerText = "Error al enviar los datos";
         }
-    } catch (error) {
-        document.getElementById('mensaje').innerText = `Error de conexión: ${error}`;
+    } catch (err) {
+        document.getElementById("resultado").innerText = "Error: " + err;
     }
-}
+});
