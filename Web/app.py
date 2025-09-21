@@ -34,12 +34,14 @@ class SensorData(BaseModel):
 # Endpoints
 @app.post("/datosSensor")
 async def recibir_datos(data: SensorData):
+    fechahora = data.Fecha or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute(
             "INSERT OR REPLACE INTO datosSensor (Fecha, Contador, CO2) VALUES (?, ?, ?)",
-            (data.Fecha, data.Contador, data.CO2)
+            (fechahora, data.Contador, data.CO2)
         )
         conn.commit()
     except Exception as e:

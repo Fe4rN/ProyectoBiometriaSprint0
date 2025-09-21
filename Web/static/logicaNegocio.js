@@ -38,16 +38,19 @@ document.getElementById("sensorForm").addEventListener("submit", async function(
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ Contador: parseInt(contador), CO2: parseFloat(co2) })
+            body: JSON.stringify({
+                Fecha: new Date().toISOString(),
+                Contador: parseInt(contador),
+                CO2: parseFloat(co2) })
         });
 
         const data = await response.json();
         if (data.status === "ok") {
-            document.getElementById("resultado").innerText = "Datos enviados correctamente";
+            document.getElementById("mensaje").innerText = "Datos enviados correctamente";
         } else {
-            document.getElementById("resultado").innerText = "Error al enviar los datos";
+            document.getElementById("mensaje").innerText = "Error al enviar los datos";
         }
     } catch (err) {
-        document.getElementById("resultado").innerText = "Error: " + err;
+        document.getElementById("mensaje").innerText = "Error: " + err;
     }
 });
