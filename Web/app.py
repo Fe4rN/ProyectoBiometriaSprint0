@@ -27,7 +27,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Estructura de datos
 class SensorData(BaseModel):
-    Fecha: str
+    Fecha: Optional[str] = None
     Contador: int
     CO2: float
 
