@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sprint 0 Fédor</title>
+    <script src="../logicaNegocio.js" defer></script>
 </head>
 <body>
     <h2>Última lectura de sensor</h2>
@@ -13,27 +14,5 @@
         Contador: N/A<br>
         CO2: N/A
     </div>
-    
-    <script>
-        function obtenerUltimo() {
-            fetch('/ultimo')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        document.getElementById("resultado").innerHTML = "No hay datos aún";
-                    } else {
-                        document.getElementById("resultado").innerHTML =
-                        "Fecha: " + data.Fecha + "<br>" +
-                        "Contador: " + data.Contador + "<br>" +
-                        "CO2: " + data.CO2;
-                    }
-                })
-                .catch(err => {
-                    alert("Error al obtener datos: " + err);
-                });
-        }
-
-        setInterval(obtenerUltimo, 5000);
-    </script>
 </body>
 </html>

@@ -1,40 +1,49 @@
 import os
 import sqlite3
-from flask import Flask, request, jsonify
 from datetime import datetime
-from flask import render_template
+from typing import Optional
 
-app = Flask(__name__)
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
 
+app = FastAPI()
+
+# Ruta a Base de Datos
 DB_PATH = os.path.join(os.path.dirname(__file__), "datosSensores.db")
 
-@app.route('/datosSensor', methods=['POST'])
-def recibir_datos():
-    data = request.get_json()
-    if not data or 'Contador' not in data or 'CO2' not in data:
-        return jsonify({"error": "Datos inválidos"}), 400
-    
-    fechahora = data.get('Fecha', datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    contador = data['Contador']
-    co2 = data['CO2']
+templates = Jinja2Templates(directory="templates")
+
+class SensorData(BaseModel):
+    Fecha: Optional[str] = None
+    Contador: int
+    CO2: float
+
+# Endpoints
+
+@app.post("/datosSensor")
+async def recibir_datos(data: SensorData):
+    fechahora = data.Fecha or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute(
             "INSERT OR REPLACE INTO datosSensor (Fecha, Contador, CO2) VALUES (?, ?, ?)",
-            (fechahora, contador, co2)
+            (fechahora, data.Contador, data.CO2)
         )
         conn.commit()
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
 
-    return jsonify({"status": "ok"}), 200
+    return {"status": "ok"}
 
-@app.route('/ultimo', methods=['GET'])
-def ultimo():
+
+@app.get("/ultimo")
+async def ultimo():
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
@@ -44,19 +53,11 @@ def ultimo():
         conn.close()
 
     if row:
-        return jsonify({
-            "Fecha": row[0],
-            "Contador": row[1],
-            "CO2": row[2]
-        })
+        return {"Fecha": row[0], "Contador": row[1], "CO2": row[2]}
     else:
-        return jsonify({"error": "No data"}), 404
-    
+        raise HTTPException(status_code=404, detail="No data")
 
-@app.route('/')
-def home():
-    return render_template('index.html')
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
