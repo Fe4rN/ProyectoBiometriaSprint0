@@ -39,7 +39,6 @@ document.getElementById("sensorForm").addEventListener("submit", async function(
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                Fecha: new Date().toISOString(),
                 Contador: parseInt(contador),
                 CO2: parseFloat(co2) })
         });
