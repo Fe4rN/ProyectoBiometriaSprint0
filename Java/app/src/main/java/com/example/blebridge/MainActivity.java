@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
             //Enviamos los datos a la API:
             try {
                 if(bluetoothDevice.getName() == "Fédor"){
-                    TransporteDatos.ProcesarTrama(tib);
+                    TransporteDatos.DatosProcesados datos = TransporteDatos.ProcesarTrama(tib);
+                    TransporteDatos.EnviarDatos(datos);
                 }
             } catch (SecurityException e) {
                 Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
