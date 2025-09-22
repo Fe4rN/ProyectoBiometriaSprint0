@@ -11,6 +11,7 @@ from typing import Optional
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -18,43 +19,43 @@ app = FastAPI()
 # Ruta a Base de Datos
 DB_PATH = os.path.join(os.path.dirname(__file__), "datosSensores.db")
 
-# Referencia a carpeta de HTMLs
+# Referencia a carpetas de HTML y JS
 templates = Jinja2Templates(directory="templates")
-
-from fastapi.staticfiles import StaticFiles
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Estructura de datos
+# Modelo de datos
 class SensorData(BaseModel):
-    Fecha: Optional[str] = None
+    Fecha: Optional[str] = None ## Fecha opcional porque si no se recibe la crea la función
     Contador: int
     CO2: float
 
-# Endpoints
+#SECTION - Endpoints
+
+# Endpoint de POST, recibe el modelo de datos previamente declarado
 @app.post("/datosSensor")
 async def recibir_datos(data: SensorData):
+    # Genera una fecha si el campo está vacio
     fechahora = data.Fecha or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    try:
+    try: # Conexión con la BBDD
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute(
             "INSERT OR REPLACE INTO datosSensor (Fecha, Contador, CO2) VALUES (?, ?, ?)",
             (fechahora, data.Contador, data.CO2)
-        )
+        ) # Inserta o sustituye (si ya existe cierto contador) los datos en la BBDD
         conn.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        conn.close()
+        conn.close() # Pase lo que pase cierra la conexión
 
-    return {"status": "ok"}
+    return {"status": "ok"} # Si todo fue bien, devuelve 200 OK
 
-
+# Endpoint de GET, devuelve un JSON de los datos con la última fecha
 @app.get("/ultimo")
 async def ultimo():
-    try:
+    try: ## Conexión con la BBDD
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute("SELECT Fecha, Contador, CO2 FROM datosSensor ORDER BY Fecha DESC LIMIT 1")
@@ -67,7 +68,7 @@ async def ultimo():
     else:
         raise HTTPException(status_code=404, detail="No data")
 
-
+# Devuelve el index.html renderizado al acceder al directorio raíz (cosas de FastAPI)
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})

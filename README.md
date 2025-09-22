@@ -13,5 +13,10 @@ Este proyecto se centra en la **captura de datos ambientales** desde un modulo B
 ## Funcionalidades
 
 - Lectura en tiempo real de sensores BLE.  
-- Visualización de datos biométricos en la web.  
+- Visualización de datos medioambientales en la web.  
 - Almacenamiento y recuperación de datos históricos.
+
+## Recursos
+
+- **Dirección Web**: http://13.37.194.239:5000
+- Enlace **Figma** con los diseños y la ingeniería inversa (también incluidos en la carpeta Doc): [Sprint0 Fédor](https://www.figma.com/board/ZXr6GtmPDFBBFq0Fxf57Qd/Sprint0-F%C3%A9dor?node-id=0-1&t=vq2UG07EEHSMFoVu-1)

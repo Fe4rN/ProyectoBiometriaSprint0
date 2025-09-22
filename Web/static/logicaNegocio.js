@@ -3,6 +3,7 @@
 //---------------------------------
 
 // Método para obtener el último valor
+// Envia peticion al endpoint /ultimo que le devuelve las mediciones, luego escriben en el HTML sus valores
 async function obtenerUltimo() {
     try {
         const respuesta = await fetch('/ultimo');
@@ -21,12 +22,14 @@ async function obtenerUltimo() {
     }
 }
 
-//Actualizamos los datos cada 5 segundos
+// Así nos evitamos la modificacion de la URL y la recarga de la página
+document.getElementById("sensorForm").addEventListener("submit", subirDato(e));
+//Actualizamos los datos cada 5 segundos para una mejor UX
 setInterval(obtenerUltimo, 5000);
 
-
-// Método para subir datos manualmente
-document.getElementById("sensorForm").addEventListener("submit", async function(e) {
+// Permite enviar datos desde la web, lee los campos de CO2 y contador y los envia al endpoint "/datosSensor",
+// que los guarda en la base de datos
+async function subirDato(e) {
     e.preventDefault();
 
     const contador = document.getElementById("contador").value;
@@ -52,4 +55,4 @@ document.getElementById("sensorForm").addEventListener("submit", async function(
     } catch (err) {
         document.getElementById("mensaje").innerText = "Error: " + err;
     }
-});
+};

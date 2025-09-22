@@ -1,3 +1,5 @@
+# Requerimientos para poder usar FastAPI
+
 fastapi
 uvicorn[standard]
 jinja2
