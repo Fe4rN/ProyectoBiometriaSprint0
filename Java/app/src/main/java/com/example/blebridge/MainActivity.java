@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             if (deviceName != null && deviceName.equals("Fédor")) {
                 Log.d(ETIQUETA_LOG, "Enviando datos");
                 TransporteDatos.DatosProcesados datos = TransporteDatos.ProcesarTrama(tib);
-                TransporteDatos.EnviarDatos(datos);
+                new Thread(() -> TransporteDatos.EnviarDatos(datos)).start();
             } else {
                 System.out.println("El nombre no coincide: " + deviceName);
             }

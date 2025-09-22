@@ -72,7 +72,7 @@ public class TransporteDatos {
             //Construimos el JSON con los datos a enviar
             JSONObject json = new JSONObject();
             json.put("Fecha", timestamp);
-            json.put("Contador", datos.getC02());
+            json.put("Contador", datos.getContador());
             json.put("CO2", datos.getC02());
 
             //Establecemos la conexión y indicamos que es un POST
