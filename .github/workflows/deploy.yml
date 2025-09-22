@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.EC2_DEPLOY_KEY }}
           port: 22
           script: |
-            cd ~/webServer/Web
+            cd ~/webServer/src/Web
             git fetch origin develop
             git reset --hard origin/develop
             pip3 install -r requirements.txt
