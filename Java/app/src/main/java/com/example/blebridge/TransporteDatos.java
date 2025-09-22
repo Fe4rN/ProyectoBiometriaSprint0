@@ -14,6 +14,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 
 //Esta clase procesa las tramas recibidas y envia los datos contenidos a la BBDD a traves de la API
@@ -40,18 +41,25 @@ public class TransporteDatos {
     }
 
     public static DatosProcesados ProcesarTrama(TramaIBeacon trama) throws Exception {
-        int major = Utilidades.bytesToIntOK(trama.getMajor()); //Pasamos el major de bytes a entero
+        byte[] majorBytes = trama.getMajor();
+        byte[] minorBytes = trama.getMinor();
 
-        int idMedicion = major >> 8 & 0xFF; //Obtenemos los valores del byte alto
+        int major = ((majorBytes[0] & 0xFF) << 8) | (majorBytes[1] & 0xFF);
+        int idMedicion = (major >> 8) & 0xFF;
+        int contador = major & 0xFF;
 
-        int contador = major & 0xFF; //Obtenemos los valores del byte bajo
+        System.out.println("Raw major: " + Arrays.toString(majorBytes));
+        System.out.println("Major int: " + major + " (ID=" + idMedicion + ", contador=" + contador + ")");
+        System.out.println("Raw minor: " + Arrays.toString(minorBytes));
+
         if (idMedicion == 11) {
-            int valorCO2 = Utilidades.bytesToIntOK(trama.getMinor());
+            int valorCO2 = ((minorBytes[0] & 0xFF) << 8) | (minorBytes[1] & 0xFF);
             valorCO2 = ProcesarCO2(valorCO2);
+            System.out.println("CO2: " + valorCO2);
 
-            return new DatosProcesados(contador, valorCO2); //Devolvemos la clase con los datos del sensor
+            return new DatosProcesados(contador, valorCO2);
         } else {
-            throw new Exception("Medicion leída no es de C02");
+            throw new Exception("Medicion leída no es de C02 (ID=" + idMedicion + ")");
         }
     }
 

@@ -106,6 +106,25 @@ public class MainActivity extends AppCompatActivity {
 
         TramaIBeacon tib = new TramaIBeacon(bytes);
 
+        try {
+            String deviceName = bluetoothDevice.getName();
+
+            if (deviceName != null && deviceName.equals("Fédor")) {
+                Log.d(ETIQUETA_LOG, "Enviando datos");
+                TransporteDatos.DatosProcesados datos = TransporteDatos.ProcesarTrama(tib);
+                TransporteDatos.EnviarDatos(datos);
+            } else {
+                System.out.println("El nombre no coincide: " + deviceName);
+            }
+        } catch (SecurityException e) {
+            Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
         if (tib.getUUID() != null) {
             Log.d(ETIQUETA_LOG, " ----------------------------------------------------");
             Log.d(ETIQUETA_LOG, " prefijo  = " + Utilidades.bytesToHexString(tib.getPrefijo()));
@@ -123,18 +142,6 @@ public class MainActivity extends AppCompatActivity {
                     + Utilidades.bytesToInt(tib.getMinor()) + " ) ");
             Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
             Log.d(ETIQUETA_LOG, " ****************************************************");
-
-            //Enviamos los datos a la API:
-            try {
-                if(bluetoothDevice.getName() == "Fédor"){
-                    TransporteDatos.DatosProcesados datos = TransporteDatos.ProcesarTrama(tib);
-                    TransporteDatos.EnviarDatos(datos);
-                }
-            } catch (SecurityException e) {
-                Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
 
         }else {
             Log.d(ETIQUETA_LOG, "UUID no valido");
