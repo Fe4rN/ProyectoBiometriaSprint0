@@ -40,6 +40,8 @@ public class TransporteDatos {
         return CO2_original;
     }
 
+    //Esta clase devuelve un objeto DatosProcesados (o un error) que obtiene a partir de una TramaIBeacon que se
+    //le pasa
     public static DatosProcesados ProcesarTrama(TramaIBeacon trama) throws Exception {
         byte[] majorBytes = trama.getMajor();
         byte[] minorBytes = trama.getMinor();
