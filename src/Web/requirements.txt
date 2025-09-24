@@ -3,3 +3,6 @@
 fastapi
 uvicorn[standard]
 jinja2
+
+# Requerimientos para pruebas
+pytest
