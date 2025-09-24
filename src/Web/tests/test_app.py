@@ -3,7 +3,7 @@ import sqlite3
 import tempfile
 import pytest
 from fastapi.testclient import TestClient
-import app
+from Web import app
 
 @pytest.fixture(scope="function", autouse=True)
 def test_db(monkeypatch):
@@ -27,7 +27,7 @@ def test_db(monkeypatch):
 
     # Sustituimos el apth a la DDBB por la falsa
     monkeypatch.setattr(app, "DB_PATH", db_path)
-    import logicaNegocio
+    from Web import logicaNegocio
     monkeypatch.setattr(logicaNegocio, "DB_PATH", db_path)
 
     yield db_path  # Ejecutamos el test
