@@ -12,7 +12,6 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 
@@ -21,7 +20,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
-import java.util.UUID;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             if (deviceName != null && deviceName.equals("Fédor")) {
                 Log.d(ETIQUETA_LOG, "Enviando datos");
                 TransporteDatos.DatosProcesados datos = TransporteDatos.ProcesarTrama(tib);
-                new Thread(() -> TransporteDatos.EnviarDatos(datos)).start();
+                new Thread(() -> TransporteDatos.PrepararYEnviarDatos(datos)).start();
             } else {
                 System.out.println("El nombre no coincide: " + deviceName);
             }
