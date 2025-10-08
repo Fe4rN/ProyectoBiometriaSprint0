@@ -4,23 +4,16 @@ package com.example.blebridge;
 // Autor: Fédor Tikhomirov
 //--------------------------------------
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 
 //Esta clase procesa las tramas recibidas y envia los datos contenidos a la BBDD a traves de la API
 public class TransporteDatos {
     //Dirección de la instancia EC2
-    static final String DIRECCIONAPI = "http://13.37.194.239:5000/datosSensor";
+
 
     //Clase para los datos procesados porque Java no tiene structs
     public static class DatosProcesados{
@@ -65,7 +58,7 @@ public class TransporteDatos {
         }
     }
 
-    public static void EnviarDatos(DatosProcesados datos){
+    public static void PrepararYEnviarDatos(DatosProcesados datos){
         try {
             //Obtenemos fecha actual
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -77,23 +70,7 @@ public class TransporteDatos {
             json.put("Contador", datos.getContador());
             json.put("CO2", datos.getC02());
 
-            //Establecemos la conexión y indicamos que es un POST
-            URL url = new URL(DIRECCIONAPI);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; utf-8");
-            conn.setDoOutput(true);
-
-            // Enviamos los datos
-            try (OutputStream os = conn.getOutputStream()){
-                byte[] input = json.toString().getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
-
-            //Recibimos la respuesta y desconectamos
-            int code = conn.getResponseCode();
-            System.out.println("Respuesta del servidor: " + code);
-            conn.disconnect();
+            LogicaNegocio.EnviarDatos(json);
 
         } catch (Exception e) {
             //Por que es Java con lo que trabajamos
