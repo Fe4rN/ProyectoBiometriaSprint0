@@ -1,12 +1,23 @@
+#---------------------------------
+# Autor: Fédor Tikhomirov
+# Fecha: 10 de octubre de 2025
+#---------------------------------
+
+
+import os
 import sqlite3
 from datetime import datetime
 from typing import Optional
-
 from fastapi import HTTPException
 
 # Ruta a la Base de Datos
-import os
 DB_PATH = os.path.join(os.path.dirname(__file__), "datosSensores.db")
+
+#------------------------------------------------------------------
+# Esta función inserta los datos a la base de datos
+# String:fecha, N:contador, R:co2 --> insertar_datos()
+#                     Código HTTP <--
+#------------------------------------------------------------------
 
 def insertar_datos(fecha: Optional[str], contador: int, co2: float):
     # Inserta o actualiza datos en la base de datos.
@@ -27,6 +38,10 @@ def insertar_datos(fecha: Optional[str], contador: int, co2: float):
 
     return {"status": "ok"}
 
+#------------------------------------------------------------------
+# Esta función recibe los ultimos datos guardado en la base de datos
+# String:fecha, N:contador, R:co2 | HTTP: 404 <-- obtener_ultimo()
+#------------------------------------------------------------------
 
 def obtener_ultimo():
     # Devuelve el último registro guardado en la base de datos.

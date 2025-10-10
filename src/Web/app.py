@@ -1,5 +1,6 @@
 #---------------------------------
 # Autor: Fédor Tikhomirov
+# Fecha: 10 de octubre de 2025
 #---------------------------------
 
 import os

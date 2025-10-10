@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ScanCallback callbackDelEscaneo = null;
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    //  Este método busca todos los beacons cercanos
     private void buscarTodosLosDispositivosBTLE() {
         Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): empieza ");
 
@@ -79,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    // Muestra en el LogCat todos los datos de los beacons encontrados y si encuentra el nuestro, lo envia a procesar y una vez procesado, lo envia a la base de datos
     private void mostrarInformacionDispositivoBTLE(ScanResult resultado) {
         BluetoothDevice bluetoothDevice = resultado.getDevice();
         byte[] bytes = resultado.getScanRecord().getBytes();
@@ -146,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    // Busca un beacon concreto por nombre
     private void buscarEsteDispositivoBTLE(final String dispositivoBuscado ) {
         Log.d(ETIQUETA_LOG, " buscarEsteDispositivoBTLE(): empieza ");
 
@@ -193,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
         }
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    // Detiene la busqueda de beacons
     private void detenerBusquedaDispositivosBTLE() {
 
         if ( this.callbackDelEscaneo == null ) {
@@ -236,8 +232,7 @@ public class MainActivity extends AppCompatActivity {
         this.detenerBusquedaDispositivosBTLE();
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    // Inicializar Bluetooth
     private void inicializarBlueTooth() {
         Log.d(ETIQUETA_LOG, " inicializarBlueTooth(): obtenemos adaptador BT ");
 

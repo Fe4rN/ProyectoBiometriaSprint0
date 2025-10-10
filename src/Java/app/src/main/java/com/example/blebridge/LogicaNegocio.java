@@ -1,3 +1,8 @@
+//----------------------------------------------
+//  Autor: Fédor Tikhomirov
+//  Fecha: 10 de octubre de 2025 
+//----------------------------------------------
+
 package com.example.blebridge;
 
 import org.json.JSONObject;
@@ -6,9 +11,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+//  Esta clase envia los datos recibidos en la trama a la API desde el teléfono
 public class LogicaNegocio {
     static final String DIRECCIONAPI = "http://13.37.194.239:5000/datosSensor";
-
+        
+    //  Enviamos los datos pasados a la direccion de la API
+    //         JSON: datos --> EnviarDatos()
+    //  Exception | 200 OK <--
     public static void EnviarDatos(JSONObject datos){
         try {
             //Establecemos la conexión y indicamos que es un POST

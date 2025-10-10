@@ -1,7 +1,8 @@
 package com.example.blebridge;
 
 //--------------------------------------
-// Autor: Fédor Tikhomirov
+//  Autor: Fédor Tikhomirov
+//  Fecha: 10 de octubre de 2025
 //--------------------------------------
 
 import org.json.JSONObject;
@@ -10,12 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
-//Esta clase procesa las tramas recibidas y envia los datos contenidos a la BBDD a traves de la API
+//  Esta clase procesa las tramas recibidas y las prepara para el envio
 public class TransporteDatos {
-    //Dirección de la instancia EC2
 
-
-    //Clase para los datos procesados porque Java no tiene structs
+    //  Clase para los datos procesados porque Java no tiene structs
     public static class DatosProcesados{
         int contador;
         int C02;
@@ -28,13 +27,21 @@ public class TransporteDatos {
 
     }
 
+    //------------------------------------------------------------------------------
+    //  Procesamos los valores de CO2 para que sean correctos e inteligibles
+    //           N:Co2 --> ProcesarCO2()
+    //  N:Co2Procesado <--
+    //------------------------------------------------------------------------------
     private static int ProcesarCO2(int CO2_original){
         // TODO: Implementar procesado de datos una vez que haya datos a procesar
         return CO2_original;
     }
 
-    //Esta clase devuelve un objeto DatosProcesados (o un error) que obtiene a partir de una TramaIBeacon que se
-    //le pasa
+    //------------------------------------------------------------------------------
+    //  Este método obtiene los valores de Major y Minor y los procesa a valores legibles por el ser humano
+    //                 TramaIBeacon: trama --> ProcesarTrama()
+    //  DatosProcesados: datos | Excepción <--
+    //------------------------------------------------------------------------------
     public static DatosProcesados ProcesarTrama(TramaIBeacon trama) throws Exception {
         byte[] majorBytes = trama.getMajor();
         byte[] minorBytes = trama.getMinor();
@@ -57,7 +64,12 @@ public class TransporteDatos {
             throw new Exception("Medicion leída no es de C02 (ID=" + idMedicion + ")");
         }
     }
-
+        
+    //------------------------------------------------------------------------------
+    //  Este método añade una fecha de lectura y transforma los datos a JSON
+    //  DatosProcesados: datos --> PrepararYEnviarDatos()
+    //      200 OK | Excepción <--
+    //------------------------------------------------------------------------------
     public static void PrepararYEnviarDatos(DatosProcesados datos){
         try {
             //Obtenemos fecha actual
@@ -73,7 +85,6 @@ public class TransporteDatos {
             LogicaNegocio.EnviarDatos(json);
 
         } catch (Exception e) {
-            //Por que es Java con lo que trabajamos
             e.printStackTrace();
         }
     }

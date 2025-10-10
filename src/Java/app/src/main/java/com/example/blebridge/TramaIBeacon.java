@@ -114,13 +114,11 @@ public class TramaIBeacon {
 //    public TramaIBeacon(byte[] bytes) {
 //        this.losBytes = bytes;
 //
-//        // Validate packet length
 //        if (bytes == null || bytes.length < 27) {
 //            Log.e(ETIQUETA_LOG, "TramaIBeacon: Insufficient data length (" + (bytes == null ? 0 : bytes.length) + ")");
 //            return;
 //        }
 //
-//        // Check iBeacon signature: Company ID (0x4C 0x00), iBeacon Type (0x02), iBeacon Length (0x15)
 //        if (bytes[2] == 0x4C && bytes[3] == 0x00 && bytes[4] == 0x02 && bytes[5] == 0x15) {
 //            prefijo = Arrays.copyOfRange(losBytes, 0, 5 + 1); // 6 bytes: length, type, companyID, iBeacon type, length
 //            advFlags = Arrays.copyOfRange(bytes, 0, 3); // 2 bytes
